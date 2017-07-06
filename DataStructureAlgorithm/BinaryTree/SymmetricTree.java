@@ -10,6 +10,7 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
+
  /* Recursive solution */
 public boolean isSymmetric(TreeNode root) {
   return (root == null) || isSymmetricHelp(root.left, root.right);
