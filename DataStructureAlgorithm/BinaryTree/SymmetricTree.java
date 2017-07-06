@@ -36,31 +36,3 @@ public boolean isSymmetric(TreeNode root) {
   }
   return true;
 }
- /* Iterative solution with two queues */
-public boolean isSymmetric(TreeNode root) {
-        if (root == null) return true;
-        Queue<TreeNode> leftQ = new LinkedList<>();
-        Queue<TreeNode> rightQ = new LinkedList<>();
-        
-        leftQ.add(root);
-        rightQ.add(root);
-        while (!leftQ.isEmpty()) {
-            int level = leftQ.size();
-            while (level -- > 0) {
-                TreeNode left = leftQ.poll();
-                TreeNode right = rightQ.poll();
-                if (left != null && right == null || left == null && left != null) return false;
-                if (left != null && right != null && left.val != right.val) return false;
-                if (left != null) {
-                    leftQ.add(left.left);
-                    leftQ.add(left.right);
-                }
-                if (right != null) {
-                    rightQ.add(right.right);
-                    rightQ.add(right.left);
-                }
-                
-            }
-        }
-        return true;
-    }
