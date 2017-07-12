@@ -10,6 +10,37 @@
  * int param_4 = obj.getMin();
  */
 
+/* using one stack */
+public class MinStack {
+    Stack<Integer> S;
+    int min;
+    public MinStack() {
+        S = new Stack<>();
+        min = Integer.MAX_VALUE;
+    }
+    
+    public void push(int x) {  
+        if (x <= min) {
+            S.push(min);
+            min = x;
+        }
+        S.push(x);
+    }
+    
+    public void pop() {
+        if (S.pop() == min) min = S.pop();
+    }
+    
+    public int top() {
+        return S.peek();
+    }
+    
+    public int getMin() {   
+        return min;
+    }
+}
+
+/* using two stacks */
 public class MinStack {
     Stack<Integer> stack, minStack;
     /** initialize your data structure here. */
