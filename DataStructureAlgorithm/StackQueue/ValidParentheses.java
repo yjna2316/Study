@@ -19,7 +19,7 @@ public class Solution {
     }
 }
 
-/* using stack with tocharArray*/
+/* using stack with toCharArray*/
 public class Solution {
     public boolean isValid(String str) {
         if (str.length() % 2 == 1) return false;
@@ -61,6 +61,7 @@ public class Solution {
         return stack.isEmpty();
     }
 }
+
 /* using HashMap*/
 public class Solution {
     private static final Map<Character, Character> map = new HashMap<Character, Character>() {{
