@@ -4,7 +4,7 @@
  */
 
 /* 
- * What if Exception in thread "main" java.lang.ArithmeticException: / by zero, 
+ * What if Exception in thread "main" java.lang.ArithmeticException: / by zero occurs, 
  * how would you handle this?
  */
  
