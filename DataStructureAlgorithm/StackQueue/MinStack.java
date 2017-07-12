@@ -23,9 +23,9 @@ public class MinStack {
         if (minStack.isEmpty() ||  x <= minStack.peek()) {
             minStack.push(x);
         }
-       
     }
     
+    /* As the methods return an object, should use equals() to compare the contents in the object */
     public void pop() {
         if (stack.pop().equals(minStack.peek())) minStack.pop();
     }
