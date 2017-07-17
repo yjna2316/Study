@@ -20,10 +20,8 @@ public class MyStack {
     }
     public void push(int x) {
         q.add(x);
-        int num = q.size();
-        while (num > 1) {
+        for (int i = 1; i < q.size(); i ++) {
             q.add(q.remove());
-            num --;
         }
     }
     public int pop() {

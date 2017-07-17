@@ -10,6 +10,9 @@
  * boolean param_4 = obj.empty();
  */
 
+/* (Two Stacks) Push - O(n) per operation, Pop - O(1) per operation 
+ * Push - Space Complexity  O(n)
+ */
 public class MyQueue {
     Stack<Integer> s1, s2;
     /** Initialize your data structure here. */
@@ -42,5 +45,45 @@ public class MyQueue {
     /** Returns whether the queue is empty. */
     public boolean empty() {
         return s1.isEmpty();
+    }
+}
+
+/* (Two Stacks) Push - O(1) per operation, Pop - Amortized O(1) per operation */
+
+public class MyQueue {
+    Stack<Integer> input, output;
+    /** Initialize your data structure here. */
+    public MyQueue() {
+        input = new Stack<>();
+        output = new Stack<>();
+    }
+    private int front;
+    /** Push element x to the back of queue. */
+    /* Time Complexity: O(1), Space Complexity: O(n) need additional memory to store the queue elements */
+    public void push(int x) {
+        if (input.empty()) {
+            front = x;
+        }
+        input.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    public int pop() {
+         if (output.empty()) {
+            while(!input.empty()) {
+                output.push(input.pop());
+            }
+        }
+        return output.pop();
+    }
+    
+    /** Get the front element. */
+    public int peek() {
+        return (output.isEmpty()) ? front : output.peek();
+    }
+    
+    /** Returns whether the queue is empty. */
+    public boolean empty() {
+        return input.isEmpty() && output.isEmpty();
     }
 }
