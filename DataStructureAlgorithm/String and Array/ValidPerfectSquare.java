@@ -19,6 +19,7 @@ public class Solution {
         return false;
     }
 }
+
 public class Solution {
     public boolean isPerfectSquare(int num) {
         for (int x = 1; x <= num / 2; x ++) 
