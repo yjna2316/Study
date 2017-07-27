@@ -3,6 +3,7 @@
  * 367. Valid Perfect Square
  */
 
+/* solution 1 - binary search */
 public class Solution {
     public boolean isPerfectSquare(int num) {
         int left = 1, right = num;
@@ -19,6 +20,8 @@ public class Solution {
         return false;
     }
 }
+
+/* solution 2 - without binary search */
 public class Solution {
     public boolean isPerfectSquare(int num) {
         for (int x = 1; x <= num / 2; x ++) 
