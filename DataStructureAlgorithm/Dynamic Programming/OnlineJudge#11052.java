@@ -1,6 +1,7 @@
 /* 
  * 11052. 붕어빵 판매하기
- * https://www.acmicpc.net/submit/11052/6449688
+ * https://www.acmicpc.net/problem/11052
+ * time: O(n^2), space: O(n)
  */
 import java.util.*;
 
