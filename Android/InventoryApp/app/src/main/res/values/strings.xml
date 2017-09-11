@@ -29,13 +29,16 @@
     <!-- Toast message in editor when new item has been successfully inserted -->
     <string name="editor_insert_item_successful">저장 성공</string>
 
-    <!-- Text hint for name field in the editor -->
+    <!-- Text hint for name field  -->
     <string name="hint_item_name">Name</string>
 
-    <!-- Text hint for quantity field in the editor -->
+    <!-- Text hint for quantity field  -->
     <string name="hint_item_quantity">0</string>
 
-    <!-- Text hint for price field in the editor -->
+    <!-- Text hint for sale button field  -->
+    <string name="hint_item_sale_button">SALE</string>
+
+    <!-- Text hint for price field -->
     <string name="hint_item_price">Price</string>
 
     <!-- Units for price of the price (Korean Currency, Won) -->
@@ -52,6 +55,9 @@
 
     <!-- Label for image information of the item in the editor -->
     <string name="Item_image">Image</string>
+
+    <!-- Label for the item's price if the price is unknown-->
+    <string name="price_default">0</string>
 
 
 
