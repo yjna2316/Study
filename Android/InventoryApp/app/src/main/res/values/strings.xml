@@ -1,0 +1,59 @@
+<resources>
+    <!-- Name for the application  -->
+    <string name="app_name">Inventory App</string>
+
+    <!-- Label for editor menu option to save item and leave editor -->
+    <string name="action_save">Save</string>
+
+    <!-- Label for editor overflow menu option that deletes the current item -->
+    <string name="action_delete">Delete</string>
+
+    <!-- Label for editor overflow menu option that contacts the supplier through the other app  -->
+    <string name="action_order_more">Order More</string>
+
+    <!-- Title text for the empty view -->
+    <string name="empty_view_text"> There\'s no items in the list </string>
+
+    <!-- Subtitle text for the empty view that prompts the user to add an item -->
+    <string name="empty_view_subtext"> Get started by adding an item </string>
+
+    <!-- Title for the activity to add a new item -->
+    <string name="editor_activity_title_new_pet">Add an Item</string>
+
+    <!-- Title for the activity to edit an existing item -->
+    <string name="editor_activity_title_edit_pet">Edit Item</string>
+
+    <!-- Toast message in editor when new item has failed to be inserted-->
+    <string name="editor_insert_item_failed">저장 실패</string>
+
+    <!-- Toast message in editor when new item has been successfully inserted -->
+    <string name="editor_insert_item_successful">저장 성공</string>
+
+    <!-- Text hint for name field in the editor -->
+    <string name="hint_item_name">Name</string>
+
+    <!-- Text hint for quantity field in the editor -->
+    <string name="hint_item_quantity">0</string>
+
+    <!-- Text hint for price field in the editor -->
+    <string name="hint_item_price">Price</string>
+
+    <!-- Units for price of the price (Korean Currency, Won) -->
+    <string name="unit_item_price">\\</string>
+
+    <!-- Label for the name of item in the editor  -->
+    <string name="Item_name">Name</string>
+
+    <!-- Label for the number of item information in the editor  -->
+    <string name="Item_quantity">Quantity</string>
+
+    <!-- Label for the price information of item in the editor -->
+    <string name="Item_price">Price</string>
+
+    <!-- Label for image information of the item in the editor -->
+    <string name="Item_image">Image</string>
+
+
+
+
+</resources>
