@@ -1,6 +1,11 @@
 package com.example.android.inventoryapp;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -18,7 +23,12 @@ import com.example.android.inventoryapp.data.ItemContract.ItemEntry;
  * Allows user to create a new item or edit an existing one.
  */
 
-public class EditorActivity  extends AppCompatActivity {
+public class EditorActivity  extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>  {
+
+    /** Identifier for the pet data loader */
+    private static final int EXISTING_ITEM_LOADER = 0;
+
     /** EditText field to enter the item name */
     private EditText mNameEditText;
 
@@ -28,11 +38,33 @@ public class EditorActivity  extends AppCompatActivity {
     /** EditText field to enter the pet's price */
     private EditText mPriceEditText;
 
+    /** Intent Data */
+    private Uri mCurrentItemUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        // Examine the intent that was used to launch this activity,
+        // in order to figure out if we're creating a new item or editing an existing one.
+        Intent intent = getIntent();
+        mCurrentItemUri = intent.getData();
+
+        // If the intent doesn't contain a item content URI, then we know that we are
+        // creating a item
+        if (mCurrentItemUri == null) {
+            // This is a new item, so change the app bar to say "Add an item"
+            setTitle(getString(R.string.editor_activity_title_new_item));
+
+            // Invalidate the options menu, so the menu option can be hidden.
+            invalidateOptionsMenu();
+        } else {
+            // Otherwise this is an existing item, so change app bar to say "Edit Item"
+            setTitle(getString(R.string.editor_activity_title_edit_item));
+
+            getLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
+        }
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_item_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_quantity_text_view);
@@ -83,35 +115,120 @@ public class EditorActivity  extends AppCompatActivity {
         String quantityString = mQuantityEditText.getText().toString().trim();
         String priceString = mPriceEditText.getText().toString().trim();
 
+        // Check if this is supposed to be a new pet
+        // and check if all the fields in the editor are blank
+        if (mCurrentItemUri == null &
+                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(quantityString) &&
+                TextUtils.isEmpty(priceString)) {
+            // Since no fields were modified, we can return early without creating a new pet.
+            // No need to create ContentValues and no need to do any ContentProvider operations.
+            return;
+        }
+
         // Create a ContentValues object where column names are the keys,
         // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(ItemEntry.COLUMN_ITEM_NAME, nameString);
-        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantityString);
 
-        // If the price is not provided by the user, don't try to parse the string into an
-        // integer value. Use 0 by default.
+        // If the quantity or price is not provided by the user, use 0 by default.
+        int quantity = 0;
         int price = 0;
-        if (!TextUtils.isEmpty(priceString)) {
+        if (!TextUtils.isEmpty(quantityString)) {
+            quantity = Integer.parseInt(quantityString);
+        } else if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
+        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
         values.put(ItemEntry.COLUMN_ITEM_PRICE, price);
 
+        // Determine if this is a new or existing item
+        if (mCurrentItemUri == null) {
+            // This is a NEW item, so insert a new item into the provider,
+            // returning the content URI for the new item.
+            Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
 
-        // This is a NEW item, so insert a new item into the provider,
-        // returning the content URI for the new item.
-        Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
-
-        // Show a toast message depending on whether or not the insertion was successful.
-        if (newUri == null) {
-            // If the new content URI is null, then there was an error with insertion.
-            Toast.makeText(this, getString(R.string.editor_insert_item_failed),
-                    Toast.LENGTH_SHORT).show();
+            // Show a toast message depending on whether or not the insertion was successful.
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.editor_insert_item_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_insert_item_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
-            // Otherwise, the insertion was successful and we can display a toast.
-            Toast.makeText(this, getString(R.string.editor_insert_item_successful),
-                    Toast.LENGTH_SHORT).show();
+            // Otherwise this is an EXISTING item, so update the item with content URI: mCurrentPetUri
+            // and pass in the new ContentValues. Pass in null for the selection and selection args
+            // because mCurrentPetUri will already identify the correct row in the database that
+            // we want to modify.
+            int rowsAffected = getContentResolver().update(mCurrentItemUri, values, null, null);
+
+            // Show a toast message depending on whether or not the update was successful.
+            if (rowsAffected == 0) {
+                // If no rows were affected, then there was an error with the update.
+                Toast.makeText(this, getString(R.string.editor_update_item_failed),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the update was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_update_item_successful),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
 
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Since the editor shows all pet attributes, define a projection that contains
+        // all columns from the pet table
+        String[] projection = {
+                ItemEntry._ID,
+                ItemEntry.COLUMN_ITEM_NAME,
+                ItemEntry.COLUMN_ITEM_QUANTITY,
+                ItemEntry.COLUMN_ITEM_PRICE };
+
+        // This loader will execute the ContentProvider's query method on a background thread
+        return new CursorLoader(this,   // Parent activity context
+                mCurrentItemUri,         // Query the content URI for the current pet
+                projection,             // Columns to include in the resulting Cursor
+                null,                   // No selection clause
+                null,                   // No selection arguments
+                null);                  // Default sort order
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        // Bail early if the cursor is null or there is less than 1 row in the cursor
+        if (cursor == null || cursor.getCount() < 1) {
+            return;
+        }
+        // Proceed with moving to the first row of the cursor and reading data from it
+        // (This should be the only row in the cursor)
+        if (cursor.moveToFirst()) {
+            // Find the columns of item attributes that we're interested in
+            int nameColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_NAME);
+            int quantityColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_QUANTITY);
+            int priceColumnIndex = cursor.getColumnIndex(ItemEntry.COLUMN_ITEM_PRICE);
+
+            // Extract out the value from the Cursor for the given column index
+            String name = cursor.getString(nameColumnIndex);
+            int quantity = cursor.getInt(quantityColumnIndex);
+            int price = cursor.getInt(priceColumnIndex);
+
+            // Update the views on the screen with the values from the database
+            mNameEditText.setText(name);
+            mQuantityEditText.setText(Integer.toString(quantity));
+            mPriceEditText.setText(Integer.toString(price));
+
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // If the loader is invalidated, clear out all the data from the input fields.
+        mNameEditText.setText("");
+        mQuantityEditText.setText("");
+        mPriceEditText.setText("");
     }
 }

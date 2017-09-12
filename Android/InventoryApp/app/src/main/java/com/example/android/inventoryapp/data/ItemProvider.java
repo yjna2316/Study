@@ -95,6 +95,14 @@ public class ItemProvider extends  ContentProvider {
             default:
                 throw new IllegalArgumentException("cannot query unkonw URI " + uri);
         }
+
+        // Set notification URI on the Cursor,
+        // so we know what content URI the Cursor was created for.
+        // If the data at this URI changes, then we know we need to update the Cursor
+        // getContext().getContentResolver()   The content resolver from the caller's context.
+        // uri                                 The content URI to watch
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return cursor;
     }
 
@@ -125,7 +133,10 @@ public class ItemProvider extends  ContentProvider {
             return null;
         }
 
-        // ContentUris.withAppendedId appends the given ID to the end of the URI
+        // Notify all listeners that the data has changed for the item content URI
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
     }
 
@@ -153,8 +164,15 @@ public class ItemProvider extends  ContentProvider {
         // get writable database to update the data
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
 
-        // Returns the number of database rows affected by the update statement
-        return db.update(ItemEntry.TABLE_NAME, contentValues, selection, selectionArgs);
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        int rowUpdated = db.update(ItemEntry.TABLE_NAME, contentValues, selection, selectionArgs);
+        if (rowUpdated > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // return the number of rows updated
+        return rowUpdated;
     }
 
     /**
@@ -164,17 +182,31 @@ public class ItemProvider extends  ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Get writable database
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
+
+        // The number of rows deleted
+        int rowsDeleted;
+
         int match = sUriMatcher.match(uri);
         switch (match) {
             case ITEMS:
-                return db.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             case ITEM_ID:
                 selection = ItemEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return db.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
+        // If 1 or more rows were deleted, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsDeleted > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows deleted
+        return rowsDeleted;
     }
 
     /**
