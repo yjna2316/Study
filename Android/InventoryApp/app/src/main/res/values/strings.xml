@@ -5,6 +5,9 @@
     <!-- Label for editor menu option to save item and leave editor -->
     <string name="action_save">Save</string>
 
+    <!-- Label for ListActivity overflow menu option that deletes the all item -->
+    <string name="action_delete_all_entries">Delete All</string>
+
     <!-- Label for editor overflow menu option that deletes the current item -->
     <string name="action_delete">Delete</string>
 
@@ -22,6 +25,21 @@
 
     <!-- Title for the activity to edit an existing item -->
     <string name="editor_activity_title_edit_item">Edit Item</string>
+
+    <!-- Toast message in editor when current item was successfully deleted  -->
+    <string name="editor_delete_item_successful">Item successfully deleted</string>
+
+    <!-- Toast message in editor when current item has failed to be deleted  -->
+    <string name="editor_delete_item_failed">Error with deleting item</string>
+
+    <!-- Dialog message to ask the user to confirm deleting the current item -->
+    <string name="delete_dialog_msg">Delete this item?</string>
+
+    <!-- Dialog button text for the option to confirm deleting the current item -->
+    <string name="delete">Delete</string>
+
+    <!-- Dialog button text for the option to cancel deletion of the current item -->
+    <string name="cancel">Cancel</string>
 
     <!-- Toast message in editor when new item has failed to be inserted-->
     <string name="editor_insert_item_failed">저장 실패</string>
@@ -65,7 +83,12 @@
     <!-- Label for the item's price if the price is unknown-->
     <string name="price_default">0</string>
 
+    <!-- Dialog message when user is leaving editor but hasn't saved changes  -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
 
+    <!-- Dialog button text for the option to discard a user's changes  -->
+    <string name="discard">Discard</string>
 
-
+    <!-- Dialog button text for the option to keep editing the current pet  -->
+    <string name="keep_editing">Keep Editing</string>
 </resources>
