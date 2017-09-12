@@ -102,6 +102,21 @@ public class EditorActivity  extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * This method is called after invalidateOptionsMenu(), so that the
+     * menu can be updated (some menu items can be hidden or made visible).
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new item, hide the "Delete" menu item.
+        if (mCurrentItemUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
@@ -109,6 +124,7 @@ public class EditorActivity  extends AppCompatActivity implements
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 saveItem();
+                finish();
                 return true;
             // Respond to a click on the "Order More" menu option
             case R.id.action_order_more:
@@ -117,7 +133,6 @@ public class EditorActivity  extends AppCompatActivity implements
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
-                deleteItem();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -140,6 +155,7 @@ public class EditorActivity  extends AppCompatActivity implements
                         };
                 // Show a dialog that notifies the user they have unsaved changes
                 showUnsavedChangesDialog(discardButtonClickListener);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -174,7 +190,8 @@ public class EditorActivity  extends AppCompatActivity implements
         int price = 0;
         if (!TextUtils.isEmpty(quantityString)) {
             quantity = Integer.parseInt(quantityString);
-        } else if (!TextUtils.isEmpty(priceString)) {
+        }
+        if (!TextUtils.isEmpty(priceString)) {
             price = Integer.parseInt(priceString);
         }
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);

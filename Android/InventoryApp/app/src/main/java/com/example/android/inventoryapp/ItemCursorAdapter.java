@@ -2,7 +2,6 @@ package com.example.android.inventoryapp;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,11 +64,6 @@ public class ItemCursorAdapter extends CursorAdapter{
         String itemQuantity = cursor.getString(quantityColumnIndex);
         String itemPrice = cursor.getString(priceColumnIndex);
 
-        // If the item price is empty, then use some default text
-        // that says "0", so the TextView isn't blank.
-        if (TextUtils.isEmpty(itemPrice)) {
-            itemPrice = context.getString(R.string.price_default);
-        }
 
         // update the TextViews with the attributes for the current item
         nameTextView.setText(itemName);

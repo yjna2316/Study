@@ -89,8 +89,7 @@
         <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:paddingLeft="4dp">
+            android:layout_weight="2">
 
             <!-- Price field -->
             <EditText
@@ -100,10 +99,12 @@
                 style="@style/EditorFieldStyle" />
 
             <!-- Units for price (\) -->
+            <!--
             <TextView
                 android:id="@+id/label_item_price_units"
                 android:text="@string/unit_item_price"
                 style="@style/EditorUnitsStyle"/>
+                -->
         </RelativeLayout>
     </LinearLayout>
 

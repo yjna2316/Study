@@ -26,7 +26,7 @@ public class ListActivity extends AppCompatActivity implements
     private static final int ITEM_LOADER = 0;
 
     /** Adapter being used to display the data in listView */
-    ItemCursorAdapter cursorAdapter = null;
+    ItemCursorAdapter mCursorAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +53,10 @@ public class ListActivity extends AppCompatActivity implements
 
         // Setup cursor adapter to create a list item for each row of item data in the Cursor.
         // There is no item data yet (until the loader finishes) so pass in null for the cursor.
-        cursorAdapter = new ItemCursorAdapter(this, null);
+        mCursorAdapter = new ItemCursorAdapter(this, null);
         // Attach cursor adapter to the ListView
-        itemListView.setAdapter(cursorAdapter);
+        itemListView.setAdapter(mCursorAdapter);
+
         itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /**
              * @param adapterView  The AdapterView where the click happened.
@@ -136,7 +137,7 @@ public class ListActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Update {ItemCursorAdapter} with this new cursor containing updated item data
         // The framework will take care of closing the old cursor once we return.
-        cursorAdapter.swapCursor(data);
+        mCursorAdapter.swapCursor(data);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class ListActivity extends AppCompatActivity implements
         // The Loader's data is now unavailable.
         // Remove any references to the old data by replacing it with
         // a null Cursor.
-        cursorAdapter.swapCursor(null);
+        mCursorAdapter.swapCursor(null);
     }
 
 
