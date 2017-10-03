@@ -1,6 +1,7 @@
 /**
  * 206. Reverse Linked List
  * https://leetcode.com/problems/reverse-linked-list/description/
+ * (M)Reverse Linked List II (M)Binary Tree Upside Down (E)Palindrome Linked List 
  */ 
 
 /**
@@ -13,7 +14,7 @@
  */
 
 /* Solution 1 - Iteratively */
-public class Solution {
+public class Solution1 {
     public ListNode reverseList(ListNode head) {
         ListNode prev = new ListNode(0);
         ListNode p = head;
@@ -25,5 +26,23 @@ public class Solution {
             prev.next = q;
         }
         return prev.next;        
+    }
+}
+
+/**
+ * Solution 2 
+ * Use 3 pointers to reverse the list, iteratively
+ */
+class Solution2 {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        while (head != null)
+        {
+            ListNode next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+        }
+        return prev;
     }
 }
