@@ -14,13 +14,7 @@ class Solution1 {
         
     }
     public int findMinDifference(List<String> timePoints) { 
-        /*int size = timePoints.size();
-        // by pigeon hole short-circuit, avoid unnecessary calculations
-        if (size > 1440) 
-            return 0;
-        if (size > 1440 / 2)
-            return 1;  */
-
+        int size = timePoints.size();
         Collections.sort(timePoints);
         // Collections.sort(timesInMinutes, (Integer a, Integer b) -> a - b);
         int minDiff = 24 * 60;
