@@ -9,15 +9,16 @@ class Solution {
         
         if (prices.length < 2) 
             return 0;
-        
+
         int minProfit = prices[0];
-        int max = 0; // if negative, we have to return zero so initialize max zero. Else, set max to 'prices[1] - prices[0]'
-        
+        /* if negative, we have to return zero so initialized max zero. Else, set max to 'prices[1] - prices[0]' */
+        int maxProfit = 0; 
         for (int i = 1; i < prices.length; ++ i)
         {
-            max = Math.max(prices[i] - minProfit, max);
+            /* to avoid buy and sell at the same time, we have to update maxProfit first*/
+            maxProfit = Math.max(prices[i] - minProfit, maxProfit);
             minProfit = Math.min(prices[i], minProfit);
         }
-        return max;      
+        return maxProfit;      
     }
 }           
